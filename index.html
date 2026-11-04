@@ -319,7 +319,30 @@ document.addEventListener("keydown",e=>{
 });
 </script>
 
-<div class="tap-hint" id="tapHint">🎵 Tap anywhere to play our songs</div>
+<style>
+#welcome{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:#fff;
+  background:radial-gradient(ellipse at center,var(--curtain) 0%,var(--maroon) 45%,var(--maroon-deep) 100%);transition:opacity .7s ease,visibility .7s}
+#welcome.gone{opacity:0;visibility:hidden}
+#welcome .eyebrow{display:block;margin-bottom:14px}
+#welcome h2{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-size:clamp(3rem,10vw,5.5rem);line-height:1;font-weight:700}
+#welcome p{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(1.2rem,3.5vw,1.6rem);color:var(--gold);margin:14px 0 30px}
+#welcome button{font:700 1.05rem Lato,system-ui,sans-serif;letter-spacing:.08em;color:#fff;background:var(--teal);border:0;border-radius:999px;padding:15px 38px;cursor:pointer;box-shadow:0 0 0 0 rgba(47,163,154,.6);animation:pulse 2s infinite}
+#welcome button:hover,#welcome button:focus-visible{background:#27887f;outline:none}
+#welcome small{display:block;margin-top:16px;color:#e7cfcf;font-size:.85rem}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,163,154,.6)}70%{box-shadow:0 0 0 18px rgba(47,163,154,0)}100%{box-shadow:0 0 0 0 rgba(47,163,154,0)}}
+body.locked{overflow:hidden}
+</style>
+<div id="welcome" role="dialog" aria-label="Welcome">
+  <div>
+    <span class="eyebrow">The Aquino &amp; Sarreal Family</span>
+    <h2>AQSA &amp; Co.</h2>
+    <p>Lolo Bok <span style="color:var(--teal-soft)">♥</span> Lola Mama &amp; The Lucky 13</p>
+    <button id="enterBtn" type="button">♪ ENTER</button>
+    <small>Turn your sound up 🔊</small>
+  </div>
+</div>
+<script>document.body.classList.add("locked");</script>
+<div class="tap-hint hide" id="tapHint">🎵 Tap anywhere to play our songs</div>
 <button class="sound" id="sound" aria-label="Turn background song off">
   <span class="disc" id="soundIcon">♪</span>
   <span><span id="soundLabel">Song off</span><small id="soundTitle"></small></span>
@@ -359,7 +382,11 @@ document.addEventListener("keydown",e=>{
     hint.classList.add("hide");
     if (audio.paused) { wanted = true; tryPlay(); } else { wanted = false; audio.pause(); }
   });
-  setTimeout(() => hint.classList.add("hide"), 12000);
+  const welcome = document.getElementById("welcome");
+  document.getElementById("enterBtn").addEventListener("click", () => {
+    wanted = true; tryPlay();
+    welcome.classList.add("gone"); document.body.classList.remove("locked");
+  });
   sync();
 })();
 </script>
